@@ -1,0 +1,15 @@
+---
+# handlers file for media-wiki
+
+- name: Enable MariaDB and HTTPD services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+  - mariadb
+  - httpd
+
+- name : Starting httpd
+  service :
+    name : httpd
+    state : restarted

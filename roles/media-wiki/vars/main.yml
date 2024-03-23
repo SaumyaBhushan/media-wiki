@@ -1,0 +1,12 @@
+---
+# vars file for media-wiki
+
+db_user: wiki
+db_pass: y0ur0wnp@sstoBeusehere
+db_name: mediawiki
+mediawiki_url: "https://releases.wikimedia.org/mediawiki/1.31/mediawiki-1.31.0.tar.gz"
+mediawiki_tar_file: "mediawiki-1.31.0.tar.gz"
+vm_user: azure_user
+gpg_sign_url: "https://releases.wikimedia.org/mediawiki/1.31/mediawiki-1.31.0.tar.gz.sig"
+gpg_sign_tar_name: "mediawiki-1.31.0.tar.gz.sig"
+mediawiki_version: '1.31.0'

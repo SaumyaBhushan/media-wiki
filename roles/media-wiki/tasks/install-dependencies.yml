@@ -1,0 +1,26 @@
+---
+- name: Install dependencies
+  yum: 
+    name:
+    - httpd
+    - mariadb
+    - php
+    - php-mysqlnd
+    - mariadb-server 
+    - mariadb 
+    - php-json 
+    - mod_ssl 
+    - php-apcu
+    - php-pear
+    - php-xml
+    - php-intl
+    - php-gd
+    - php-mbstring
+    - wget
+    - pip
+    - python3-PyMySQL
+    state: present
+  
+- name: Install PyMySQL
+  pip:
+    name: pymysql

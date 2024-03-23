@@ -1,0 +1,73 @@
+- name: Download MediaWiki tarball
+  get_url:
+    url: "{{ mediawiki_url }}"
+    dest: "/home/{{ vm_user }}/{{ mediawiki_tar_file }}"
+    mode: 777
+
+- name: Download GPG signature for the tarball
+  get_url:
+    url: "{{ gpg_sign_url }}"
+    dest: "/home/{{ vm_user }}/{{ gpg_sign_tar_name }}"
+
+- name : Untar the downloaded mediawiki tar file
+  unarchive :
+    src : "/home/{{ vm_user }}/{{ mediawiki_tar_file }}"
+    dest : /var/www
+    remote_src : yes
+
+- name: Creating symbolic link for mediawiki
+  file:
+    src: "/var/www/mediawiki-{{ mediawiki_version }}/"
+    dest: /var/www/mediawiki
+    state: link
+
+- name : Changing Apache to look at /var/www
+  lineinfile :
+    path : /etc/httpd/conf/httpd.conf
+    regexp : DocumentRoot "/var/www/html"
+    line : DocumentRoot "/var/www"
+
+- name : Changing Apache to look at <Directory "/var/www/html">
+  lineinfile :
+    path : /etc/httpd/conf/httpd.conf
+    regexp : <Directory "/var/www/html">
+    line : <Directory "/var/www">
+
+- name : Changing Apache to look at DirectoryIndex index.html index.html.var index.php
+  lineinfile :
+    path : /etc/httpd/conf/httpd.conf
+    regexp :     DirectoryIndex index.html
+    line : DirectoryIndex index.html index.html.var index.php
+  notify: Starting httpd
+
+- name : Changing ownership
+  shell: "chown -R apache:apache /var/www/mediawiki-{{ mediawiki_version }}"
+  notify: Starting httpd
+
+- name : Enable and start Firewalld Service
+  # shell: systemctl start firewalld
+  service: 
+    name: firewalld
+    enabled: True
+    state: started
+
+- name: permit traffic for https service
+  firewalld:
+    service: https
+    permanent: yes
+    state: enabled
+  
+- name: permit traffic for http service
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+
+# - name : Restarting firewall
+#   shell: systemctl restart firewalld
+
+- name : Restart Firewalld Service
+  # shell: systemctl start firewalld
+  service: 
+    name: firewalld
+    state: restarted
