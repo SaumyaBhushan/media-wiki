@@ -1,0 +1,6 @@
+---
+# tasks file for media-wiki
+
+- import_tasks: install-dependencies.yml
+- import_tasks: configure-mariadb.yml
+- import_tasks: mediawiki.yml

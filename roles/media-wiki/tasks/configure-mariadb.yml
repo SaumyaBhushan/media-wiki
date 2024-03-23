@@ -1,0 +1,44 @@
+---
+
+- name: Start MariaDB service
+  systemd:
+    name: mariadb
+    state: started
+    enabled: true
+
+- name : Secure MariaDB Anon user
+  mysql_user:
+    name: ''
+    host_all: True
+    state: absent
+    login_unix_socket: '/var/lib/mysql/mysql.sock'
+
+
+- name: Create user
+  mysql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_pass }}"
+    priv: '*.*:ALL'
+    host: localhost
+    state: present
+    login_unix_socket: '/var/lib/mysql/mysql.sock'
+
+- name: creating wikidatabase
+  mysql_db:
+    name: "{{ db_name }}"
+    state: present
+    login_unix_socket: '/var/lib/mysql/mysql.sock'
+
+- name: "Grant all privileges to user {{ db_user }} on {{ db_name }}"
+  mysql_user:
+    name: "{{ db_user }}"
+    host: localhost
+    priv: "wikidatabase.*:ALL"
+    state: present
+    login_unix_socket: '/var/lib/mysql/mysql.sock'
+  notify: Enable MariaDB and HTTPD services
+
+- name: Enable HTTPD service
+  systemd:
+    name: httpd
+    enabled: yes

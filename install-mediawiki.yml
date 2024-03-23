@@ -1,0 +1,6 @@
+---
+- hosts : all
+  roles : 
+  - media-wiki
+  remote_user : azure_user
+  become : yes
