@@ -5,13 +5,13 @@ terraform {
       version = "~>3.0"
     }
   }
-  # backend "remote" {
-  #   organization = "example_corp"
+  backend "remote" {
+    organization = "example_corp"
 
-  #   workspaces {
-  #     name = "media-wiki-prod"
-  #   }
-  # }
+    workspaces {
+      name = "media-wiki-prod"
+    }
+  }
 }
 
 
